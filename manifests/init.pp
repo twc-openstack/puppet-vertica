@@ -13,9 +13,10 @@
 #
 class vertica (
   $build_ver   = undef,
+  $deb         = undef,
   $fetch_url   = undef,
   $file_system = '/dev/vda1',
-  $deb         = undef,
+  $ra_bytes    = 2048,
   $swap_file   = '/swapfile',
 ) {
 
@@ -28,6 +29,7 @@ class vertica (
   class {'vertica::config':
     file_system => $file_system,
     swap_file   => $swap_file,
+    ra_bytes    => $ra_bytes,
   }
 
 }
