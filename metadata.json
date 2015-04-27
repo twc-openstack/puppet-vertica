@@ -1,0 +1,14 @@
+{
+  "name": "puppet-vertica",
+  "version": "0.1.0",
+  "author": "bklei",
+  "summary": "Module for installing and configuring vertica",
+  "license": "Apache 2.0",
+  "source": "https://github.com/twc-openstack/puppet-vertica.git",
+  "project_page": "https://github.com/twc-openstack/puppet-vertica",
+  "issues_url": "https://github.com/twc-openstack/puppet-vertica/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+
