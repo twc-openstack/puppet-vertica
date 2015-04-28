@@ -17,6 +17,7 @@ class vertica (
   $file_system = '/dev/vda1',
   $ra_bytes    = 2048,
   $swap_file   = '/swapfile',
+  $time_zone   = 'US/Mountain',
 ) {
 
   class {'vertica::install':
@@ -28,6 +29,7 @@ class vertica (
     file_system => $file_system,
     swap_file   => $swap_file,
     ra_bytes    => $ra_bytes,
+    time_zone   => $time_zone,
   }
 
 }

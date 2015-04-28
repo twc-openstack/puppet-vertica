@@ -6,8 +6,10 @@ class vertica::config(
   $file_system = undef,
   $swap_file = undef,
   $ra_bytes = undef,
+  $time_zone = undef,
 ) {
 
+  ensure_packages(['mcelog', 'pstack', 'sysstat'])
   $dba_group = 'verticadba'
 
   group { $dba_group:
@@ -16,18 +18,26 @@ class vertica::config(
 
   user { 'dbadmin':
     ensure     => present,
-    groups     => $dba_group,
+    gid        => $dba_group,
     managehome => true,
     shell      => '/bin/bash',
     require    => Group[$dba_group],
+  } ~>
+  file_line { 'Set time zone in dbadmin .profile':
+    path => '/home/dbadmin/.profile',
+    line => "export TZ=${time_zone}",
   }
 
   user { 'mcadmin':
     ensure     => present,
-    groups     => $dba_group,
+    gid        => $dba_group,
     managehome => true,
     shell      => '/bin/bash',
     require    => Group[$dba_group],
+  } ~>
+  file_line { 'Set time zone in mcadmin .profile':
+    path => '/home/mcadmin/.profile',
+    line => "export TZ=${time_zone}",
   }
 
   exec { "Ensure read ahead is set to ${ra_bytes} bytes":
