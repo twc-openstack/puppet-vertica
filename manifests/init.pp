@@ -12,7 +12,6 @@
 #  }
 #
 class vertica (
-  $build_ver   = undef,
   $deb         = undef,
   $fetch_url   = undef,
   $file_system = '/dev/vda1',
@@ -21,9 +20,8 @@ class vertica (
 ) {
 
   class {'vertica::install':
-    fetch_url => $fetch_url,
-    build_ver => $build_ver,
     deb       => $deb,
+    fetch_url => $fetch_url,
   }
 
   class {'vertica::config':

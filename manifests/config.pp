@@ -46,11 +46,19 @@ class vertica::config(
   }
 
   exec { "Ensure ${swap_file} exists":
-    command => "dd if=/dev/zero of=${swap_file} bs=1024 count=2097152 && mkswap ${swap_file} && swapon ${swap_file} && echo '${swap_file} none swap sw 0 0' >> /etc/fstab",
+    command => "dd if=/dev/zero of=${swap_file} bs=1024 count=2097152 && mkswap ${swap_file} && swapon ${swap_file}",
     path    => '/bin:/sbin:/usr/bin:/usr/sbin:/tmp',
     user    => 'root',
     group   => 'root',
     onlyif  => "test -f ${swap_file}; test $? -ne 0",
+  }
+
+  exec { "Ensure ${swap_file} is in fstab":
+    command => "echo '${swap_file} none swap sw 0 0' >> /etc/fstab",
+    path    => '/bin:/sbin:/usr/bin:/usr/sbin:/tmp',
+    user    => 'root',
+    group   => 'root',
+    onlyif  => "grep -q '${swap_file}' /etc/fstab; test $? -ne 0",
   }
 
 }

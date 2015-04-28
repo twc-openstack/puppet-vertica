@@ -3,15 +3,14 @@
 # This module manages vertica installation
 #
 class vertica::install(
-  $fetch_url = undef,
-  $build_ver = undef,
   $deb       = undef,
+  $fetch_url = undef,
 ) {
 
    $tmp_dir = '/tmp/vertica'
    $latest_deb = "${tmp_dir}/${deb}"
 
-   wget::fetch { "${fetch_url}/${build_ver}/${deb}":
+   wget::fetch { "${fetch_url}/${deb}":
      destination => $latest_deb,
      timeout     => 300,
      require     => File[$tmp_dir],
