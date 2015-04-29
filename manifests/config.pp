@@ -71,4 +71,13 @@ class vertica::config(
     onlyif  => "grep -q '${swap_file}' /etc/fstab; test $? -ne 0",
   }
 
+  file { '/opt/vertica/config/d5415f948449e9d4c421b568f2411140.dat':
+    ensure  => file,
+    source  => 'puppet:///modules/vertica/eula.dat',
+    mode    => '0664',
+    owner   => 'dbadmin',
+    group   => $dba_group,
+    require => [Group[$dba_group], User['dbadmin']],
+  }
+
 }
