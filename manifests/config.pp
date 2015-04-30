@@ -3,14 +3,18 @@
 # This module configures users and groups for vertica
 #
 class vertica::config(
-  $file_system = undef,
-  $swap_file = undef,
-  $ra_bytes = undef,
-  $time_zone = undef,
+  $file_system       = undef,
+  $db_admin_password = undef,
+  $lang              = undef,
+  $mc_admin_password = undef,
+  $swap_file         = undef,
+  $ra_bytes          = undef,
+  $time_zone         = undef,
 ) {
 
   ensure_packages(['mcelog', 'pstack', 'sysstat'])
   $dba_group = 'verticadba'
+  $vertica_profile = '/etc/profile.d/vertica_node.sh'
 
   group { $dba_group:
     ensure => present,
@@ -21,6 +25,7 @@ class vertica::config(
     gid        => $dba_group,
     managehome => true,
     shell      => '/bin/bash',
+    password   => $db_admin_password,
     require    => Group[$dba_group],
   } ~>
   file_line { 'Set time zone in dbadmin .profile':
@@ -33,6 +38,7 @@ class vertica::config(
     gid        => $dba_group,
     managehome => true,
     shell      => '/bin/bash',
+    password   => $mc_admin_password,
     require    => Group[$dba_group],
   } ~>
   file_line { 'Set time zone in mcadmin .profile':
@@ -78,6 +84,18 @@ class vertica::config(
     owner   => 'dbadmin',
     group   => $dba_group,
     require => [Group[$dba_group], User['dbadmin']],
+  }
+
+  file { $vertica_profile:
+    ensure  => file,
+    mode    => '0644',
+    owner   => 'dbadmin',
+    group   => $dba_group,
+    require => [Group[$dba_group], User['dbadmin']],
+  } ~>
+  file_line { "Make sure LANG is set in ${vertica_profile}":
+    path => $vertica_profile,
+    line => "LANG=${lang}",
   }
 
 }
