@@ -98,4 +98,9 @@ class vertica::config(
     line => "LANG=${lang}",
   }
 
+  file_line { "Set open file limits for dbadmin":
+    path => '/etc/security/limits.conf',
+    line => 'dbadmin  - nofile  65536',
+  }
+
 }
