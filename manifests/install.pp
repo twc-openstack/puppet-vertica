@@ -3,18 +3,27 @@
 # This module manages vertica installation
 #
 class vertica::install(
-  $deb       = undef,
-  $fetch_url = undef,
+  $console_deb = undef,
+  $deb         = undef,
+  $fetch_url   = undef,
 ) {
 
    $tmp_dir = '/tmp/vertica'
    $latest_deb = "${tmp_dir}/${deb}"
+   $latest_console_deb = "${tmp_dir}/${console_deb}"
 
    wget::fetch { "${fetch_url}/${deb}":
      destination => $latest_deb,
      timeout     => 300,
      require     => File[$tmp_dir],
      before      => [File[$latest_deb], Package['install-deb']],
+   }
+
+   wget::fetch { "${fetch_url}/${console_deb}":
+     destination => $latest_console_deb,
+     timeout     => 300,
+     require     => File[$tmp_dir],
+     before      => [File[$latest_console_deb], Package['install-console-deb']],
    }
 
    file { $tmp_dir:
@@ -28,6 +37,10 @@ class vertica::install(
      ensure => present,
    }
 
+   file { $latest_console_deb:
+     ensure => present,
+   }
+
    tidy { $tmp_dir:
      matches => 'vertica*.deb',
      recurse => true,
@@ -38,5 +51,12 @@ class vertica::install(
      provider => dpkg,
      source   => $latest_deb,
      alias    => 'install-deb',
+   }
+
+   package { 'vertica-console':
+     ensure   => latest,
+     provider => dpkg,
+     source   => $latest_console_deb,
+     alias    => 'install-console-deb',
    }
 }

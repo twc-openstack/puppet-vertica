@@ -12,6 +12,7 @@
 #  }
 #
 class vertica (
+  $console_deb       = undef,
   $deb               = undef,
   $db_admin_password = undef,
   $fetch_url         = undef,
@@ -24,8 +25,9 @@ class vertica (
 ) {
 
   class {'vertica::install':
-    deb       => $deb,
-    fetch_url => $fetch_url,
+    console_deb => $console_deb,
+    deb         => $deb,
+    fetch_url   => $fetch_url,
   }
 
   class {'vertica::config':
