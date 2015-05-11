@@ -16,7 +16,6 @@ class vertica (
   $deb               = undef,
   $db_admin_password = undef,
   $fetch_url         = undef,
-  $file_system       = '/dev/vda1',
   $lang              = 'en_US.UTF-8',
   $mc_admin_password = undef,
   $ra_bytes          = 2048,
@@ -32,7 +31,6 @@ class vertica (
 
   class {'vertica::config':
     db_admin_password => $db_admin_password,
-    file_system       => $file_system,
     lang              => $lang,
     mc_admin_password => $mc_admin_password,
     ra_bytes          => $ra_bytes,
