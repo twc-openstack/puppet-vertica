@@ -64,7 +64,7 @@ class vertica::config(
     path    => '/bin:/sbin:/usr/bin:/usr/sbin:/tmp',
     user    => 'root',
     group   => 'root',
-    onlyif  => "test -f ${swap_file}; test $? -ne 0",
+    onlyif  => "test -e ${swap_file}; test $? -ne 0",
   }
 
   exec { "Ensure ${swap_file} is in fstab":
