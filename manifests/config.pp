@@ -46,14 +46,14 @@ class vertica::config(
   }
 
   exec { "Ensure read ahead is set to ${ra_bytes} bytes":
-    command  => "/bin/bash -c 'while read disk; do blockdev --setra ${ra_bytes} \$disk; done < <(ls /dev/[a-z]d[a-z])'",
+    command  => "/bin/bash -c 'while read disk; do blockdev --setra ${ra_bytes} \$disk; done < <(df --output=source | grep /dev/)'",
     path     => '/bin:/sbin:/usr/bin:/usr/sbin:/tmp',
     user     => 'root',
     group    => 'root',
   }
 
   exec { "Ensure read ahead command is in /etc/rc.local":
-    command  => "/bin/bash -c 'while read disk; do grep -q \$disk /etc/rc.local || sed -i \"s#^exit 0#blockdev --setra ${ra_bytes} \$disk\\n\0#\" /etc/rc.local; done < <(ls /dev/[a-z]d[a-z])'",
+    command  => "/bin/bash -c 'while read disk; do grep -q \$disk /etc/rc.local || sed -i \"s#^exit 0#blockdev --setra ${ra_bytes} \$disk\\n\0#\" /etc/rc.local; done < <(df --output=source | grep /dev/)'",
     path     => '/bin:/sbin:/usr/bin:/usr/sbin:/tmp',
     user     => 'root',
     group    => 'root',
