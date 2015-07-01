@@ -101,4 +101,19 @@ class vertica::config(
     line => 'dbadmin  - nofile  65536',
   }
 
+  file { '/bin/sh':
+    ensure => 'link',
+    target => '/bin/bash',
+    mode    => '0777',
+    owner   => 'root',
+    group   => 'root',
+  }
+
+  file { '/opt/vertica/backup':
+    ensure  => 'directory',
+    owner   => 'dbadmin',
+    group   => $dba_group,
+    mode    => '0755',
+    require => Package['vertica'],
+  }
 }
