@@ -3,12 +3,16 @@
 # This module configures users and groups for vertica
 #
 class vertica::config(
-  $db_admin_password = undef,
-  $lang              = undef,
-  $mc_admin_password = undef,
-  $swap_file         = undef,
-  $ra_bytes          = undef,
-  $time_zone         = undef,
+  $api_db_user           = undef,
+  $api_db_password       = undef,
+  $lang                  = undef,
+  $db_admin_password     = undef,
+  $mc_admin_password     = undef,
+  $pers_db_user          = undef,
+  $pers_db_password      = undef,
+  $ra_bytes              = undef,
+  $swap_file             = undef,
+  $time_zone             = undef,
 ) {
 
   ensure_packages(['mcelog', 'pstack', 'sysstat'])
@@ -29,6 +33,32 @@ class vertica::config(
   } ~>
   file_line { 'Set time zone in dbadmin .profile':
     path => '/home/dbadmin/.profile',
+    line => "export TZ=${time_zone}",
+  }
+
+  user { $api_db_user:
+    ensure     => present,
+    gid        => $dba_group,
+    managehome => true,
+    shell      => '/bin/bash',
+    password   => $api_db_password,
+    require    => Group[$dba_group],
+  } ~>
+  file_line { "Set time zone in ${api_db_user} .profile":
+    path => "/home/${api_db_user}/.profile",
+    line => "export TZ=${time_zone}",
+  }
+
+  user { $pers_db_user:
+    ensure     => present,
+    gid        => $dba_group,
+    managehome => true,
+    shell      => '/bin/bash',
+    password   => $pers_db_password,
+    require    => Group[$dba_group],
+  } ~>
+  file_line { "Set time zone in ${pers_db_user} .profile":
+    path => "/home/${pers_db_user}/.profile",
     line => "export TZ=${time_zone}",
   }
 
