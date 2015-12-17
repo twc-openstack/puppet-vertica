@@ -18,6 +18,9 @@ class vertica::config(
   ensure_packages(['mcelog', 'pstack', 'sysstat'])
   $dba_group = 'verticadba'
   $vertica_profile = '/etc/profile.d/vertica_node.sh'
+  $hugepage_defrag_file = '/sys/kernel/mm/transparent_hugepage/defrag'
+  $hugepage_enabled_file = '/sys/kernel/mm/transparent_hugepage/enabled'
+  $khugepage_defrag_file = '/sys/kernel/mm/transparent_hugepage/khugepaged/defrag'
 
   group { $dba_group:
     ensure => present,
@@ -103,6 +106,30 @@ class vertica::config(
     user    => 'root',
     group   => 'root',
     onlyif  => "grep -q '${swap_file}' /etc/fstab; test $? -ne 0",
+  }
+
+  exec { 'Set hugepage defrag to never':
+    command => "echo never > ${hugepage_defrag_file}",
+    path    => '/bin:/sbin:/usr/bin:/usr/sbin:/tmp',
+    user    => 'root',
+    group   => 'root',
+    onlyif  => "grep -q '\[never\]' ${hugepage_defrag_file}; test $? -ne 0",
+  }
+
+  exec { 'Set hugepage enabled to never':
+    command => "echo never > ${hugepage_enabled_file}",
+    path    => '/bin:/sbin:/usr/bin:/usr/sbin:/tmp',
+    user    => 'root',
+    group   => 'root',
+    onlyif  => "grep -q '\[never\]' ${hugepage_enabled_file}; test $? -ne 0",
+  }
+
+  exec { 'Set khugepaged defrag to 0':
+    command => "echo 0 > ${khugepage_defrag_file}",
+    path    => '/bin:/sbin:/usr/bin:/usr/sbin:/tmp',
+    user    => 'root',
+    group   => 'root',
+    onlyif  => "grep -q '0' ${khugepage_defrag_file}; test $? -ne 0",
   }
 
   file { '/opt/vertica/config/d5415f948449e9d4c421b568f2411140.dat':
