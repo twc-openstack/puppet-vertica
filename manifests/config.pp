@@ -86,7 +86,7 @@ class vertica::config(
   }
 
   exec { "Ensure read ahead command is in /etc/rc.local":
-    command  => "/bin/bash -c 'while read disk; do grep -q \$disk /etc/rc.local || sed -i \"s#^exit 0#blockdev --setra ${ra_bytes} \$disk\\n\0#\" /etc/rc.local; done < <(df --output=source | grep /dev/)'",
+    command  => "/bin/bash -c 'while read disk; do grep -q \$disk /etc/rc.local || sed -i \"s#^exit 0#blockdev --setra ${ra_bytes} \$disk\\n\\0#\" /etc/rc.local; done < <(df --output=source | grep /dev/)'",
     path     => '/bin:/sbin:/usr/bin:/usr/sbin:/tmp',
     user     => 'root',
     group    => 'root',
@@ -113,7 +113,7 @@ class vertica::config(
     path    => '/bin:/sbin:/usr/bin:/usr/sbin:/tmp',
     user    => 'root',
     group   => 'root',
-    onlyif  => "grep -q '\[never\]' ${hugepage_defrag_file}; test $? -ne 0",
+    onlyif  => "grep -q '\\[never\\]' ${hugepage_defrag_file}; test $? -ne 0",
   }
 
   exec { 'Set hugepage enabled to never':
@@ -121,7 +121,7 @@ class vertica::config(
     path    => '/bin:/sbin:/usr/bin:/usr/sbin:/tmp',
     user    => 'root',
     group   => 'root',
-    onlyif  => "grep -q '\[never\]' ${hugepage_enabled_file}; test $? -ne 0",
+    onlyif  => "grep -q '\\[never\\]' ${hugepage_enabled_file}; test $? -ne 0",
   }
 
   exec { 'Set khugepaged defrag to 0':
