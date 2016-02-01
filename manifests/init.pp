@@ -18,6 +18,7 @@ class vertica (
   $deb               = undef,
   $db_admin_password = undef,
   $fetch_url         = undef,
+  $install_console   = false,
   $lang              = 'en_US.UTF-8',
   $mc_admin_password = undef,
   $pers_db_user      = undef,
@@ -28,9 +29,10 @@ class vertica (
 ) {
 
   class {'vertica::install':
-    console_deb => $console_deb,
-    deb         => $deb,
-    fetch_url   => $fetch_url,
+    console_deb     => $console_deb,
+    deb             => $deb,
+    fetch_url       => $fetch_url,
+    install_console => $install_console,
   }
 
   class {'vertica::config':
