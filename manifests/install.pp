@@ -12,6 +12,8 @@ class vertica::install(
    $tmp_dir = '/tmp/vertica'
    $latest_deb = "${tmp_dir}/${deb}"
 
+   ensure_packages(['dialog'])
+
    wget::fetch { "${fetch_url}/${deb}":
      destination => $latest_deb,
      timeout     => 300,
@@ -73,6 +75,7 @@ class vertica::install(
      provider => dpkg,
      source   => $latest_deb,
      alias    => 'install-deb',
+     require  => Package['dialog'],
    }
 
    # Work-around vertica packaging issue which leaves logrotation non-working
