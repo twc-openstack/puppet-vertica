@@ -15,7 +15,7 @@ class vertica::config(
   $time_zone             = undef,
 ) {
 
-  ensure_packages(['mcelog', 'pstack', 'sysstat'])
+  ensure_packages(['mcelog', 'pstack', 'sysstat', 'dialog'])
   $dba_group = 'verticadba'
   $vertica_profile = '/etc/profile.d/vertica_node.sh'
   $hugepage_defrag_file = '/sys/kernel/mm/transparent_hugepage/defrag'
@@ -136,6 +136,15 @@ class vertica::config(
     ensure  => file,
     source  => 'puppet:///modules/vertica/eula.dat',
     mode    => '0664',
+    owner   => 'dbadmin',
+    group   => $dba_group,
+    require => [Group[$dba_group], User['dbadmin']],
+  }
+
+  file { '/usr/sbin/vBuddyLite':
+    ensure  => file,
+    source  => 'puppet:///modules/vertica/vBuddyLite',
+    mode    => '0755',
     owner   => 'dbadmin',
     group   => $dba_group,
     require => [Group[$dba_group], User['dbadmin']],
