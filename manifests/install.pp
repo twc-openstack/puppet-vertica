@@ -38,13 +38,6 @@ class vertica::install(
        alias    => 'install-console-deb',
      }
 
-     # Work-around vertica packaging issue which leaves logrotation non-working
-     file { '/opt/vertica/config/logrotate/mon':
-       owner   => 'root',
-       group   => 'root',
-       mode    => '0644',
-       require => Package['vertica-console'],
-     }
    } else {
      package { 'vertica-console':
        ensure   => absent,
@@ -74,14 +67,6 @@ class vertica::install(
      source   => $latest_deb,
      alias    => 'install-deb',
      require  => Package['dialog'],
-   }
-
-   # Work-around vertica packaging issue which leaves logrotation non-working
-   file { '/opt/vertica/config/logrotate/agent.logrotate':
-     owner   => 'root',
-     group   => 'root',
-     mode    => '0644',
-     require => Package['vertica'],
    }
 
 }
