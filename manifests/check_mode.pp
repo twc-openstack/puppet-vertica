@@ -11,7 +11,7 @@
 #   mode => 755,
 # }
 #
-define check_mode($mode) {
+define vertica::check_mode($mode) {
   exec { "/bin/chmod -R ${mode} ${name}":
     onlyif => "test -e ${name}",
     path   => ['/usr/bin','/usr/sbin','/bin','/sbin'],

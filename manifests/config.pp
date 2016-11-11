@@ -183,11 +183,11 @@ class vertica::config(
     require => Package['vertica'],
   }
 
-  check_mode { "/opt/vertica":
+  ::vertica::check_mode { "/opt/vertica":
     mode => 755,
     require => Package['vertica'],
   } ~>
-  check_mode { " /home/dbadmin/.ssh/id_rsa":
+  ::vertica::check_mode { " /home/dbadmin/.ssh/id_rsa":
     mode => 700,
   }
 
